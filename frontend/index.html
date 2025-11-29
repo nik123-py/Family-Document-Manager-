@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Family Document Manager (Local Only)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- No external CSS/JS/CDNs. Local only. -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Family Document Manager</h1>
+    <div id="header-user" class="header-user"></div>
+  </header>
+
+  <main class="app-container">
+    <!-- Auth area -->
+    <section id="auth-section" class="card auth-card">
+      <h2>Local Login</h2>
+      <p class="small-note">
+        All data is stored <strong>only on this computer</strong> in a local database file.
+        No data is sent to any remote server.
+      </p>
+
+      <div class="auth-forms">
+        <div>
+          <h3>Login</h3>
+          <form id="login-form">
+            <label>
+              Username
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" required />
+            </label>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+
+        <div>
+          <h3>Register (Local User)</h3>
+          <form id="register-form">
+            <label>
+              Username
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" required />
+            </label>
+            <button type="submit">Create Account</button>
+          </form>
+        </div>
+      </div>
+
+      <p id="auth-message" class="message"></p>
+    </section>
+
+    <!-- App area (hidden until login) -->
+    <section id="app-section" class="app-main hidden">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <h2>Family Members</h2>
+          <button id="add-member-btn" class="btn-small">+ Add</button>
+        </div>
+        <ul id="family-list" class="family-list"></ul>
+      </div>
+
+      <div class="content">
+        <div class="content-header">
+          <div>
+            <h2 id="selected-member-name">Select a family member</h2>
+            <p class="content-subtitle">Manage sensitive family data locally in a secure dark workspace.</p>
+          </div>
+          <div class="content-actions">
+            <button id="print-summary-btn" class="btn-small">Print Summary</button>
+            <button id="logout-btn" class="btn-small btn-secondary">Logout</button>
+          </div>
+        </div>
+
+        <div id="member-basic-info" class="card hidden">
+          <h3>Basic Info</h3>
+          <form id="basic-form" class="grid-form">
+            <label>
+              Full Name
+              <input type="text" name="name" required />
+            </label>
+            <label>
+              Relationship
+              <input type="text" name="relationship" placeholder="Mom, Dad, Sister, etc." />
+            </label>
+            <label>
+              Date of Birth
+              <input type="date" name="dob" />
+            </label>
+            <label class="full-width">
+              Notes
+              <textarea name="notes" rows="2"></textarea>
+            </label>
+            <div class="form-actions">
+              <button type="submit">Save Basic Info</button>
+              <button type="button" id="delete-member-btn" class="btn-danger">Delete Member</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="tabs" class="tabs hidden">
+          <button data-tab="documents" class="tab active">IDs & Documents</button>
+          <button data-tab="accounts" class="tab">Bank & Investments</button>
+          <button data-tab="insurances" class="tab">Insurance & Loans</button>
+          <button data-tab="lockers" class="tab">Lockers</button>
+          <button data-tab="properties" class="tab">Properties</button>
+        </div>
+
+        <div id="tab-panels">
+          <!-- Documents -->
+          <section id="tab-documents" class="tab-panel hidden">
+            <div class="panel-header">
+              <h3>Identity & Personal Documents</h3>
+              <button id="add-document-btn" class="btn-small">+ Add Document</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Number</th>
+                  <th>Issue Date</th>
+                  <th>Expiry</th>
+                  <th>Authority</th>
+                  <th>File Ref</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="documents-tbody"></tbody>
+            </table>
+          </section>
+
+          <!-- Accounts -->
+          <section id="tab-accounts" class="tab-panel hidden">
+            <div class="panel-header">
+              <h3>Bank, Demat, PPF, NPS, SSY & Other Investments</h3>
+              <button id="add-account-btn" class="btn-small">+ Add Account/Investment</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Institution</th>
+                  <th>Account # / Client ID</th>
+                  <th>Nickname</th>
+                  <th>Holder Type</th>
+                  <th>IFSC</th>
+                  <th>Value</th>
+                  <th>Nominee</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="accounts-tbody"></tbody>
+            </table>
+          </section>
+
+          <!-- Insurances & Loans -->
+          <section id="tab-insurances" class="tab-panel hidden">
+            <div class="panel-header">
+              <h3>Insurance & Loans</h3>
+              <button id="add-insurance-btn" class="btn-small">+ Add Insurance/Loan</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Company</th>
+                  <th>Policy/Loan #</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Premium/EMI</th>
+                  <th>Frequency</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="insurances-tbody"></tbody>
+            </table>
+          </section>
+
+          <!-- Lockers -->
+          <section id="tab-lockers" class="tab-panel hidden">
+            <div class="panel-header">
+              <h3>Lockers</h3>
+              <button id="add-locker-btn" class="btn-small">+ Add Locker</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bank</th>
+                  <th>Branch</th>
+                  <th>Locker #</th>
+                  <th>Joint Holders</th>
+                  <th>Nominee</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="lockers-tbody"></tbody>
+            </table>
+          </section>
+
+          <!-- Properties -->
+          <section id="tab-properties" class="tab-panel hidden">
+            <div class="panel-header">
+              <h3>Properties</h3>
+              <button id="add-property-btn" class="btn-small">+ Add Property</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Address</th>
+                  <th>City</th>
+                  <th>Type</th>
+                  <th>Ownership</th>
+                  <th>Co-owners</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="properties-tbody"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <div id="import-export" class="card hidden">
+          <h3>Import / Export</h3>
+          <p class="small-note">
+            Export downloads a JSON file with all your data for this user. Import restores from such a file.
+            All operations are local – nothing leaves your computer.
+          </p>
+          <div class="import-export-actions">
+            <button id="export-btn">Export Data (JSON)</button>
+            <label class="btn-file">
+              Import Data (JSON)
+              <input type="file" id="import-file-input" accept="application/json" />
+            </label>
+          </div>
+          <p id="import-export-message" class="message"></p>
+        </div>
+
+        <!-- Printable summary area (hidden on screen, visible on print) -->
+        <div id="print-area" class="print-area"></div>
+
+        <p id="app-message" class="message"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title"></h3>
+        <button id="modal-close-btn" class="btn-small btn-secondary">&times;</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
